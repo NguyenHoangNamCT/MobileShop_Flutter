@@ -25,8 +25,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: buildTextOfAppbarTitle(),
-        backgroundColor: Colors.blue,
+        title: buildTextOfAppbarTitle(), //gọi đến một hàm tự xây, hàm này trả về một widget Text
+        backgroundColor: Colors.blue, //đổi màu cho appbar
       ),
       drawer: Drawer(
         child: ListView(
@@ -96,10 +96,10 @@ class HomePage extends StatelessWidget {
 }
 
 ListTile buildMenuItem(
-    BuildContext context,
-    IconData icon,
+    BuildContext context, //dùng để xác định vị trí của widget trong cây widget
+    IconData icon, //là một icon
     String title,
-    VoidCallback onTap,
+    VoidCallback onTap, //một hàm không có giá trị trả về
     ) {
   return ListTile(
     leading: Icon(icon), //hiện icon đầu tiên
