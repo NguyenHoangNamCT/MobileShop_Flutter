@@ -88,11 +88,33 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text('Nội dung chính ở đây'),
+      body: SingleChildScrollView(//
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, //canh lề các phẩn tử con theo chiều ngang (start = lề trái)
+          children: [
+            // Banner quảng cáo
+            buildBanner(),
+          ],
+        ),
       ),
     );
   }
+}
+
+Widget buildBanner(){
+  return Container(
+    height: 150,
+    margin: EdgeInsets.all(10),
+    decoration: BoxDecoration( //trang trí container
+      borderRadius: BorderRadius.circular(12), //bo gốc bàn kính 12px
+      image: DecorationImage( //để hiển thị hnh ảnh
+        // image: NetworkImage('https://i.pinimg.com/564x/db/85/99/db85998510e152f6d02214da2b70ab60.jpg'), //ảnh điện thoại
+        // image: NetworkImage('https://images.pexels.com/photos/7919/pexels-photo.jpg'), //ảnh 32:9
+        image: NetworkImage('https://mega.com.vn/media/news/0106_hinh-nen-may-tinh-full-hd88.jpg'), //gắn 1 hình ảnh từ link //ảnh 16:9
+        fit: BoxFit.cover, // cách hình ảnh hiển thị (phóng to thu nhỏ hình ảnh để fill khung hình, hỉnh ảnh không bị méo nhưng sẽ bị cắt góc)
+      ),
+    ),
+  );
 }
 
 ListTile buildMenuItem(
@@ -110,6 +132,8 @@ ListTile buildMenuItem(
     },
   );
 }
+
+
 
 class buildTextOfAppbarTitle extends StatelessWidget {
   @override
