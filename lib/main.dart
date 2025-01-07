@@ -96,7 +96,8 @@ class HomePage extends StatelessWidget {
             buildBanner(),
             buildSectionTitle('Danh mục'),
             buildCategoryList(),
-
+            buildSectionTitle('Sản phẩm mới'),
+            buildProductGrid(),
           ],
         ),
       ),
@@ -215,6 +216,96 @@ class buildTextOfAppbarTitle extends StatelessWidget {
     );
   }
 }
+
+Widget buildProductGrid() {
+  return GridView.builder(
+    shrinkWrap: true, // Tránh lỗi layout overflow
+    physics: NeverScrollableScrollPhysics(), // Tắt cuộn riêng trong GridView (tránh cuộn kép)
+    padding: EdgeInsets.all(16.0),
+    itemCount: 6, // Số lượng sản phẩm hiển thị
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( //giúp định nghĩa các bố cục của GridView
+      crossAxisCount: 2, // Số cột
+      childAspectRatio: 3/4, // tỷ lệ khung hình: cao chia rộng
+      // childAspectRatio: 0.75, // Tỉ lệ khung hình (3/4=0.75)
+      crossAxisSpacing: 16.0, // Khoảng cách giữa các cột
+      mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng
+    ),
+    itemBuilder: (context, index) {
+      return ProductCard(
+        imageUrl: 'https://media.doanhnghiepvn.vn/Images/Uploaded/Share/2024/11/11/Bang-gia-Samsung-Galaxy-moi-nhat-thang-11-Galaxy-S24-Ultra-giam-cuc-gat-dap-tra-iPhone-16-pro-Max_1.jpg?format%3Dwebp', // Ảnh sản phẩm
+        name: 'Sản phẩm ${index + 1}', // Tên sản phẩm
+        price: '${(index + 1) * 1000000} VNĐ', // Giá sản phẩm
+        onTap: () {
+          // Chuyển tới chi tiết sản phẩm
+        },
+      );
+    },
+  );
+}
+
+class ProductCard extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String price;
+  final VoidCallback onTap;
+
+  const ProductCard({
+    required this.imageUrl,
+    required this.name,
+    required this.price,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector( //bắt sự kiện khi người dùng thao tác vào sản phẩm
+      onTap: onTap, // Xử lý khi nhấn vào sản phẩm
+      child: Card(
+        shape: RoundedRectangleBorder(//dùng để thay đổi hình dạng của card
+          borderRadius: BorderRadius.circular(12.0), //bo cart 12px
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded( //wiget chiếm full không gian còn trống của widget cha
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)), //bo tròn 2 góc trên 12px
+                child: Image.network( //hiển thị hình ảnh trên mạng
+                  imageUrl, //String link đến hình ảnh
+                  fit: BoxFit.cover, //cover hình ảnh sẽ được phóng to thu nhỏ sao cho vừa tỉ lệ khung hình, hình ảnh sẽ không bị kéo dãn nhưng bị cắt bớt
+                  width: double.infinity, //double.infinity yêu câu widget này chiếm toàn bộ chiều rộng của widget cha
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                price,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 /* giao diện đã làm gọn
 class MyApp extends StatelessWidget {
