@@ -94,8 +94,73 @@ class HomePage extends StatelessWidget {
           children: [
             // Banner quảng cáo
             buildBanner(),
+            buildSectionTitle('Danh mục'),
+            buildCategoryList(),
+
           ],
         ),
+      ),
+    );
+  }
+}
+
+// danh mục 1
+Widget buildSectionTitle(String title) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    child: Text(
+      title,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    ),
+  );
+}
+
+
+//danh mục 3
+Widget buildCategoryList() {
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 8.0),
+    height: 80.0, // Chiều cao của danh mục
+    child: ListView(
+      scrollDirection: Axis.horizontal, // Cuộn ngang
+      children: [
+        CategoryItem(icon: Icons.phone_android, label: 'Điện thoại'),
+        CategoryItem(icon: Icons.tablet, label: 'Máy tính bảng'),
+        CategoryItem(icon: Icons.laptop, label: 'Laptop'),
+        CategoryItem(icon: Icons.headphones, label: 'Phụ kiện'),
+        CategoryItem(icon: Icons.tv, label: 'Tivi'),
+      ],
+    ),
+  );
+}
+
+//danh mục 2
+class CategoryItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const CategoryItem({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100, // Chiều rộng của mỗi danh mục
+      margin: EdgeInsets.only(left: 16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 25, // Kích thước biểu tượng
+            backgroundColor: Colors.blueAccent,
+            child: Icon(icon, color: Colors.white, size: 20),
+          ),
+          SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -107,7 +172,7 @@ Widget buildBanner(){
     margin: EdgeInsets.all(10),
     decoration: BoxDecoration( //trang trí container
       borderRadius: BorderRadius.circular(12), //bo gốc bàn kính 12px
-      image: DecorationImage( //để hiển thị hnh ảnh
+      image: DecorationImage( //để trang trí
         // image: NetworkImage('https://i.pinimg.com/564x/db/85/99/db85998510e152f6d02214da2b70ab60.jpg'), //ảnh điện thoại
         // image: NetworkImage('https://images.pexels.com/photos/7919/pexels-photo.jpg'), //ảnh 32:9
         image: NetworkImage('https://mega.com.vn/media/news/0106_hinh-nen-may-tinh-full-hd88.jpg'), //gắn 1 hình ảnh từ link //ảnh 16:9
@@ -117,6 +182,7 @@ Widget buildBanner(){
   );
 }
 
+//ListTile trong drawer
 ListTile buildMenuItem(
     BuildContext context, //dùng để xác định vị trí của widget trong cây widget
     IconData icon, //là một icon
@@ -148,23 +214,6 @@ class buildTextOfAppbarTitle extends StatelessWidget {
           fontStyle: FontStyle.italic),
     );
   }
-}
-
-class buildListView extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-
-}
-
-class buildListViewState extends State<buildListView>{
-  @override
-  Widget build(BuildContext context) {
-    return ListView();
-  }
-
 }
 
 /* giao diện đã làm gọn
