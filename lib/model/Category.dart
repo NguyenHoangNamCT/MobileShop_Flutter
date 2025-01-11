@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Category {
   final String id;
   final String name;
@@ -24,5 +26,23 @@ class Category {
       'name': name,
       'icon': icon,
     };
+  }
+
+  // Hàm chuyển đổi chuỗi icon thành IconData
+  IconData getIcon() {
+    switch (icon) {
+      case 'phone_android':
+        return Icons.phone_android;
+      case 'tablet':
+        return Icons.tablet;
+      case 'laptop':
+        return Icons.laptop;
+      case 'headphones':
+        return Icons.headphones;
+      case 'tv':
+        return Icons.tv;
+      default:
+        return Icons.category; // Default icon nếu không tìm thấy
+    }
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobile_shop/model/Category.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'service/Category_services.dart';
 
 
 void main() async {
@@ -118,25 +121,132 @@ Widget buildSectionTitle(String title) {
 }
 
 
-//danh mục 3
+// //danh mục 3
+// Widget buildCategoryList() {
+//   // List<Category> categories = await CategoryService.getCategories();
+//   return Container(
+//     margin: EdgeInsets.symmetric(vertical: 8.0),
+//     height: 80.0, // Chiều cao của danh mục
+//     child: ListView(
+//       scrollDirection: Axis.horizontal, // Cuộn ngang
+//       children: [
+//         // CategoryItem(icon: Icons.phone_android, label: 'Điện thoại'),
+//         // CategoryItem(icon: Icons.tablet, label: 'Máy tính bảng'),
+//         // CategoryItem(icon: Icons.laptop, label: 'Laptop'),
+//         // CategoryItem(icon: Icons.headphones, label: 'Phụ kiện'),
+//         // CategoryItem(icon: Icons.tv, label: 'Tivi'),
+//
+//       ],
+//     ),
+//   );
+// }
+
 Widget buildCategoryList() {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 8.0),
-    height: 80.0, // Chiều cao của danh mục
-    child: ListView(
-      scrollDirection: Axis.horizontal, // Cuộn ngang
-      children: [
-        CategoryItem(icon: Icons.phone_android, label: 'Điện thoại'),
-        CategoryItem(icon: Icons.tablet, label: 'Máy tính bảng'),
-        CategoryItem(icon: Icons.laptop, label: 'Laptop'),
-        CategoryItem(icon: Icons.headphones, label: 'Phụ kiện'),
-        CategoryItem(icon: Icons.tv, label: 'Tivi'),
-      ],
-    ),
+  return FutureBuilder<List<Category>>(
+    future: CategoryService.getCategories(), // Gọi service để lấy danh sách danh mục
+    builder: (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator()); // Đang tải
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Lỗi: ${snapshot.error}')); // Lỗi khi tải dữ liệu
+      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        return Center(child: Text('Không có danh mục nào')); // Không có dữ liệu
+      } else {
+        // Có dữ liệu, hiển thị danh mục
+        final categories = snapshot.data!;
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 8.0),
+          height: 80.0, // Chiều cao của danh mục
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal, // Danh sách cuộn ngang
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final category = categories[index];
+              return CategoryItem(
+                icon: category.getIcon(), // Hiển thị icon tạm thời
+                label: category.name, // Hiển thị tên danh mục
+              );
+            },
+          ),
+        );
+      }
+    },
   );
 }
 
-//danh mục 2
+
+
+class CategoryListWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Category>>(
+      future: CategoryService.getCategories(), // Lấy dữ liệu từ Firestore
+      builder: (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator()); // Hiển thị loading
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Lỗi: ${snapshot.error}')); // Hiển thị lỗi
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('Không có danh mục nào')); // Không có dữ liệu
+        } else {
+          // Có dữ liệu, hiển thị danh mục
+          final categories = snapshot.data!;
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0),
+            height: 80.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                return CategoryItem(
+                  icon: category.getIcon(), // Thay thế bằng icon phù hợp
+                  label: category.name,
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
+
+
+
+// //danh mục 2
+// class CategoryItem extends StatelessWidget {
+//   final IconData icon;
+//   final String label;
+//
+//   const CategoryItem({required this.icon, required this.label});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 100, // Chiều rộng của mỗi danh mục
+//       margin: EdgeInsets.only(left: 16.0),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           CircleAvatar(
+//             radius: 25, // Kích thước biểu tượng
+//             backgroundColor: Colors.blueAccent,
+//             child: Icon(icon, color: Colors.white, size: 20),
+//           ),
+//           SizedBox(height: 8),
+//           Text(
+//             label,
+//             style: TextStyle(fontSize: 14),
+//             textAlign: TextAlign.center,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 class CategoryItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -146,7 +256,7 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100, // Chiều rộng của mỗi danh mục
+      width: 100, // Chiều rộng mỗi danh mục
       margin: EdgeInsets.only(left: 16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -167,6 +277,7 @@ class CategoryItem extends StatelessWidget {
     );
   }
 }
+
 
 Widget buildBanner(){
   return Container(
